@@ -44,8 +44,10 @@ export const ROOT_ROUTE = '/'
 export const WELCOME_ROUTE = '/welcome'
 export const OPEN_SAFE_ROUTE = '/open'
 export const GENERIC_APPS_ROUTE = '/apps'
+export const GENERIC_CONNECTORS_ROUTE = '/connectors'
 export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
 export const SAFE_APP_LANDING_PAGE_ROUTE = '/share/safe-app'
+export const API_CONNECTOR_LANDING_PAGE_ROUTE = '/share/api-connector'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {
@@ -59,6 +61,7 @@ export const SAFE_ROUTES = {
   TRANSACTIONS_SINGULAR: `${ADDRESSED_ROUTE}/transactions/:${TRANSACTION_ID_SLUG}`,
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
+  CONNECTORS: `${ADDRESSED_ROUTE}/connectors`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
   SETTINGS_APPEARANCE: `${ADDRESSED_ROUTE}/settings/appearance`,
   SETTINGS_DETAILS: `${ADDRESSED_ROUTE}/settings/details`,
@@ -139,4 +142,10 @@ export const getShareSafeAppUrl = (appUrl: string, chainId: string): string => {
   const baseUrl = `${window.location.origin}${PUBLIC_URL}`
 
   return `${baseUrl}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(appUrl)}&chainId=${chainId}`
+}
+
+export const getShareApiConnectorUrl = (appUrl: string, chainId: string): string => {
+  const baseUrl = `${window.location.origin}${PUBLIC_URL}`
+
+  return `${baseUrl}${API_CONNECTOR_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(appUrl)}&chainId=${chainId}`
 }

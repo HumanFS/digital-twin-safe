@@ -16,6 +16,7 @@ import {
   getNetworkRootRoutes,
   SAFE_ROUTES,
   GENERIC_APPS_ROUTE,
+  GENERIC_CONNECTORS_ROUTE,
   SAFE_APP_LANDING_PAGE_ROUTE,
 } from './routes'
 import { setChainId } from 'src/logic/config/utils'
@@ -108,6 +109,21 @@ const Routes = (): React.ReactElement => {
             return <Redirect to={WELCOME_ROUTE} />
           }
           const redirectPath = generateSafeRoute(SAFE_ROUTES.APPS, {
+            shortName,
+            safeAddress: lastSafe,
+          })
+          return <Redirect to={`${redirectPath}${location.search}`} />
+        }}
+      />
+
+      <Route
+        exact
+        path={GENERIC_CONNECTORS_ROUTE}
+        render={() => {
+          if (!lastSafe) {
+            return <Redirect to={WELCOME_ROUTE} />
+          }
+          const redirectPath = generateSafeRoute(SAFE_ROUTES.CONNECTORS, {
             shortName,
             safeAddress: lastSafe,
           })

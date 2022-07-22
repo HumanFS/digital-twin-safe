@@ -22,6 +22,7 @@ type UseAppListReturnType = {
 }
 
 const useAppList = (): UseAppListReturnType => {
+    debugger
   const { remoteSafeApps, status: remoteAppsFetchStatus } = useRemoteSafeApps()
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
   const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps(remoteSafeApps, remoteAppsFetchStatus)

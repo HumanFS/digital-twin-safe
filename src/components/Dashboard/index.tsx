@@ -7,6 +7,7 @@ import SafeApps from './SafeApps'
 import { FeaturedApps } from './FeaturedApps/FeaturedApps'
 import MobileAppBanner from './MobileAppBanner'
 import { DashboardTitle } from './styled'
+import ApiConnectors from './ApiConnectors'
 
 const Dashboard = (): ReactElement => {
   return (
@@ -21,6 +22,10 @@ const Dashboard = (): ReactElement => {
 
       <Grid item xs={12} md={6}>
         <PendingTxsList size={4} />
+      </Grid>
+
+      <Grid item xs={12}>
+        <ApiConnectors />
       </Grid>
 
       <FeaturedApps />
