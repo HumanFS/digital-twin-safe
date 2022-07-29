@@ -62,6 +62,8 @@ export const SAFE_ROUTES = {
   ADDRESS_BOOK: `${ADDRESSED_ROUTE}/address-book`,
   APPS: `${ADDRESSED_ROUTE}/apps`,
   CONNECTORS: `${ADDRESSED_ROUTE}/connectors`,
+  MEASUREMENTS: `${ADDRESSED_ROUTE}/measurements`,
+  VARIABLES: `${ADDRESSED_ROUTE}/variables`,
   SETTINGS: `${ADDRESSED_ROUTE}/settings`,
   SETTINGS_APPEARANCE: `${ADDRESSED_ROUTE}/settings/appearance`,
   SETTINGS_DETAILS: `${ADDRESSED_ROUTE}/settings/details`,
