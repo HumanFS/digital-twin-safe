@@ -12,7 +12,7 @@ export const gradientSK = keyframes`
 }
 `
 
-export const ApiConnectorLogoSK = styled.div`
+export const SafeAppLogoSK = styled.div`
   height: ${(props: { size }) => (props.size === 'lg' ? '112px' : '50px')};
   width: ${(props: { size }) => (props.size === 'lg' ? '112px' : '50px')};
   border-radius: 50%;
@@ -22,7 +22,7 @@ export const ApiConnectorLogoSK = styled.div`
   animation: ${gradientSK} 1.5s ease infinite;
 `
 
-export const ApiConnectorTitleSK = styled.div`
+export const SafeAppTitleSK = styled.div`
   height: 18px;
   width: 160px;
   margin: 8px 0;
@@ -33,7 +33,7 @@ export const ApiConnectorTitleSK = styled.div`
   animation: ${gradientSK} 1.5s ease infinite;
 `
 
-export const ApiConnectorDescriptionSK = styled.div`
+export const SafeAppDescriptionSK = styled.div`
   height: 12px;
   width: 240px;
   margin: 2px 0;

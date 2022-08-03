@@ -6,114 +6,107 @@ import { motion } from 'framer-motion'
 import IconButton from '@material-ui/core/IconButton'
 import { Card, Title, Text, Icon } from '@gnosis.pm/safe-react-components'
 
-import { generateSafeRoute, SAFE_ROUTES, getShareApiConnectorUrl } from 'src/routes/routes'
-import { ApiConnector } from 'src/routes/safe/components/Apps/types'
-import fallbackApiConnectorLogoSvg from 'src/assets/icons/apps.svg'
+import { generateSafeRoute, getShareSafeAppUrl, SAFE_ROUTES } from 'src/routes/routes'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import fallbackSafeAppLogoSvg from 'src/assets/icons/apps.svg'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { showNotification } from 'src/logic/notifications/store/notifications'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { copyToClipboard } from 'src/utils/clipboard'
 import { getShortName } from 'src/config'
-import { ApiConnectorDescriptionSK, ApiConnectorLogoSK, ApiConnectorTitleSK } from './ApiConnectorSkeleton'
+import { SafeAppDescriptionSK, SafeAppLogoSK, SafeAppTitleSK } from './SafeAppSkeleton'
 import { primary200, primary300 } from 'src/theme/variables'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
-type ApiConnectorCardSize = 'md' | 'lg'
+type SafeAppCardSize = 'md' | 'lg'
 
-type ApiConnectorCardProps = {
-  apiConnector: ApiConnector
-  size: ApiConnectorCardSize
-  togglePin: (app: ApiConnector) => void
+type SafeAppCardProps = {
+  safeApp: SafeApp
+  size: SafeAppCardSize
+  togglePin: (app: SafeApp) => void
   isPinned?: boolean
-  isCustomApiConnector?: boolean
-  onRemove?: (app: ApiConnector) => void
+  isCustomSafeApp?: boolean
+  onRemove?: (app: SafeApp) => void
 }
 
-const ApiConnectorCard = ({
-  apiConnector,
+const SafeAppCard = ({
+  safeApp,
   size,
   togglePin,
   isPinned,
-  isCustomApiConnector,
+  isCustomSafeApp,
   onRemove,
-}: ApiConnectorCardProps): React.ReactElement => {
+}: SafeAppCardProps): React.ReactElement => {
   const chainId = useSelector(currentChainId)
   const dispatch = useDispatch()
 
   const { safeAddress } = useSafeAddress()
-  const appsPath = generateSafeRoute(SAFE_ROUTES.CONNECTORS, {
+  const appsPath = generateSafeRoute(SAFE_ROUTES.APPS, {
     shortName: getShortName(),
     safeAddress,
   })
-  let url = ''
-  if (apiConnector.connectInstructions) {
-    url = apiConnector.connectInstructions.url
-  }
-  const openApiConnectorLink = `${appsPath}?appUrl=${encodeURI(url)}`
+  const openSafeAppLink = `${appsPath}?appUrl=${encodeURI(safeApp.url)}`
 
-  const shareApiConnector = () => {
-    const shareApiConnectorUrl = getShareApiConnectorUrl(url, chainId)
-    copyToClipboard(shareApiConnectorUrl)
+  const shareSafeApp = () => {
+    const shareSafeAppUrl = getShareSafeAppUrl(safeApp.url, chainId)
+    copyToClipboard(shareSafeAppUrl)
     dispatch(showNotification(NOTIFICATIONS.SHARE_SAFE_APP_URL_COPIED))
   }
 
-  const isApiConnectorLoading = apiConnector.fetchStatus === FETCH_STATUS.LOADING
+  const isSafeAppLoading = safeApp.fetchStatus === FETCH_STATUS.LOADING
 
-  if (isApiConnectorLoading) {
+  if (isSafeAppLoading) {
     return (
-      <ApiConnectorContainer size={size}>
+      <SafeAppContainer size={size}>
         <StyledAppCard size={size}>
           <LogoContainer size={size}>
-            <ApiConnectorLogoSK size={size} />
+            <SafeAppLogoSK size={size} />
           </LogoContainer>
           <DescriptionContainer size={size}>
-            <ApiConnectorTitleSK />
-            <ApiConnectorDescriptionSK />
-            <ApiConnectorDescriptionSK />
+            <SafeAppTitleSK />
+            <SafeAppDescriptionSK />
+            <SafeAppDescriptionSK />
           </DescriptionContainer>
         </StyledAppCard>
-      </ApiConnectorContainer>
+      </SafeAppContainer>
     )
   }
 
   return (
-    <ApiConnectorContainer size={size}>
-      <StyledLink to={openApiConnectorLink} aria-label={`open ${apiConnector.displayName} Safe App`}>
+    <SafeAppContainer size={size}>
+      <StyledLink to={openSafeAppLink} aria-label={`open ${safeApp.name} Safe App`}>
         <StyledAppCard size={size}>
           {/* Safe App Logo */}
           <LogoContainer size={size}>
-            <ApiConnectorLogo
+            <SafeAppLogo
               size={size}
-              src={apiConnector.image}
-              alt={`${apiConnector.displayName || 'Safe App'} Logo`}
-              onError={setApiConnectorLogoFallback}
+              src={safeApp.iconUrl}
+              alt={`${safeApp.name || 'Safe App'} Logo`}
+              onError={setSafeAppLogoFallback}
             />
           </LogoContainer>
 
           {/* Safe App Description */}
           <DescriptionContainer size={size}>
-            <ApiConnectorTitle size="xs">{apiConnector.displayName}</ApiConnectorTitle>
-            <ApiConnectorDescription size="lg" color="inputFilled">
-              {apiConnector.shortDescription}
-            </ApiConnectorDescription>
+            <SafeAppTitle size="xs">{safeApp.name}</SafeAppTitle>
+            <SafeAppDescription size="lg" color="inputFilled">
+              {safeApp.description}
+            </SafeAppDescription>
           </DescriptionContainer>
 
           {/* Safe App Actions */}
           <ActionsContainer onClick={(e) => e.preventDefault()}>
             {/* Share Safe App button */}
-            <IconBtn
-              onClick={shareApiConnector}
-              aria-label={`copy ${apiConnector.displayName} Safe App share link to clipboard`}
-            >
+            <IconBtn onClick={shareSafeApp} aria-label={`copy ${safeApp.name} Safe App share link to clipboard`}>
               <Icon size="md" type="share" tooltip="Copy share link" />
             </IconBtn>
 
             {/* Pin & Unpin Safe App button */}
-            {!isCustomApiConnector && (
+            {!isCustomSafeApp && (
               <IconBtn
-                onClick={() => togglePin(apiConnector)}
-                aria-label={`${isPinned ? 'Unpin' : 'Pin'} ${apiConnector.displayName} Safe App`}
+                onClick={() => togglePin(safeApp)}
+                aria-label={`${isPinned ? 'Unpin' : 'Pin'} ${safeApp.name} Safe App`}
               >
                 {isPinned ? (
                   <PinnedIcon size="md" type="bookmarkFilled" color="primary" tooltip="Unpin from the Safe Apps" />
@@ -124,32 +117,29 @@ const ApiConnectorCard = ({
             )}
 
             {/* Remove custom Safe App button */}
-            {isCustomApiConnector && (
-              <IconBtn
-                onClick={() => onRemove?.(apiConnector)}
-                aria-label={`Remove ${apiConnector.displayName} custom Safe App`}
-              >
+            {isCustomSafeApp && (
+              <IconBtn onClick={() => onRemove?.(safeApp)} aria-label={`Remove ${safeApp.name} custom Safe App`}>
                 <Icon size="md" type="delete" color="error" tooltip="Remove Custom Safe App" />
               </IconBtn>
             )}
           </ActionsContainer>
         </StyledAppCard>
       </StyledLink>
-    </ApiConnectorContainer>
+    </SafeAppContainer>
   )
 }
 
-export default ApiConnectorCard
+export default SafeAppCard
 
-const setApiConnectorLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
+const setSafeAppLogoFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
   error.currentTarget.onerror = null
-  error.currentTarget.src = fallbackApiConnectorLogoSvg
+  error.currentTarget.src = fallbackSafeAppLogoSvg
 }
 
 export const SAFE_APP_CARD_HEIGHT = 190
 export const SAFE_APP_CARD_PADDING = 16
 
-const ApiConnectorContainer = styled(motion.div).attrs({
+const SafeAppContainer = styled(motion.div).attrs({
   layout: true,
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -159,7 +149,7 @@ const ApiConnectorContainer = styled(motion.div).attrs({
   display: flex;
   height: ${SAFE_APP_CARD_HEIGHT}px;
 
-  grid-column: span ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? '2' : '1')};
+  grid-column: span ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? '2' : '1')};
 `
 
 const StyledLink = styled(Link)`
@@ -173,7 +163,7 @@ const StyledAppCard = styled(Card)`
   flex: 1 1 100%;
   padding: ${SAFE_APP_CARD_PADDING}px;
   display: flex;
-  flex-direction: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? 'row' : 'column')};
+  flex-direction: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? 'row' : 'column')};
   box-shadow: none;
   border: 2px solid transparent;
 
@@ -188,30 +178,30 @@ const StyledAppCard = styled(Card)`
 
 const LogoContainer = styled.div`
   flex: 0 0;
-  flex-basis: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? '50%' : 'auto')};
+  flex-basis: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? '50%' : 'auto')};
 
   display: flex;
-  justify-content: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? 'center' : 'start')};
+  justify-content: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? 'center' : 'start')};
   align-items: center;
 `
 
-const ApiConnectorLogo = styled.img`
-  height: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? '112px' : '50px')};
-  width: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? '112px' : '50px')};
+const SafeAppLogo = styled.img`
+  height: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? '112px' : '50px')};
+  width: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? '112px' : '50px')};
   object-fit: contain;
 `
 
 const DescriptionContainer = styled.div`
   flex: 0 0;
 
-  flex-basis: ${(props: { size: ApiConnectorCardSize }) => (props.size === 'lg' ? '50%' : 'auto')};
+  flex-basis: ${(props: { size: SafeAppCardSize }) => (props.size === 'lg' ? '50%' : 'auto')};
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 `
 
-const ApiConnectorTitle = styled(Title)`
+const SafeAppTitle = styled(Title)`
   margin: 8px 0px;
   font-size: 16px;
   line-height: 22px;
@@ -219,7 +209,7 @@ const ApiConnectorTitle = styled(Title)`
   color: initial;
 `
 
-const ApiConnectorDescription = styled(Text)`
+const SafeAppDescription = styled(Text)`
   margin: 0;
   line-height: 22px;
 
