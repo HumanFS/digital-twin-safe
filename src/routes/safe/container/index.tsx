@@ -28,6 +28,7 @@ const Settings = lazy(() => import('src/routes/safe/components/Settings'))
 const Balances = lazy(() => import('src/routes/safe/components/Balances'))
 const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList'))
 const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
+const Connectors = lazy(() => import('src/routes/safe/components/Connectors'))
 
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
@@ -117,6 +118,7 @@ const Container = (): React.ReactElement => {
           render={() => wrapInSuspense(<TxList />)}
         />
         <Route exact path={SAFE_ROUTES.ADDRESS_BOOK} render={() => wrapInSuspense(<AddressBookTable />)} />
+        <Route exact path={SAFE_ROUTES.CONNECTORS} render={() => wrapInSuspense(<Connectors />)} />
         <Route
           exact
           path={SAFE_ROUTES.APPS}
